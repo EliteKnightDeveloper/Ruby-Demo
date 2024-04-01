@@ -1,0 +1,32 @@
+Rails.application.routes.draw do
+  root 'tops#index'
+
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
+  }
+  resources :users, only: [:show]
+
+  devise_scope :user do
+  post '/users/guest_sign_in', to: 'users/sessions#guest_sign_in'
+  post '/users/admin_guest_sign_in', to: 'users/sessions#admin_guest_sign_in'
+
+  end
+
+  resources :groups, only: %i[new create show edit update destroy] do
+    patch :change_owner, path: '/:user_id/owners/'
+    patch :invalid, path: '/invalids/'
+    get :group_desired_holiday, path: '/group_desired_holidays/'
+  end
+
+  resources :groupings, only: %i[index create show update destroy]
+
+  resources :desired_holidays, only: %i[new create destroy]
+
+  resources :attendances, only: %i[index new create show edit destroy]
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+end

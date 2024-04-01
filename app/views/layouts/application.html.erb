@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SotsugyouApp</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <header>
+      <h1>自動作成 シフトさん</h1>
+      <div>
+        <div class="info_btn">
+          <% if user_signed_in? %>
+          <%= link_to "管理画面", rails_admin_path, class: "info-button" if current_user.admin %>
+            <%= link_to "マイページ", user_path(current_user), class: "info-button" %>
+            <%= link_to "ログアウト", destroy_user_session_path, class: "info-button", method: :delete %>
+          <% else %>
+            <%= link_to "新規登録", new_user_registration_path, class: "info-button" %>
+            <%= link_to "ログイン", new_user_session_path, class: "info-button" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+    <div id="form_size">
+      <br>
+      <% if notice %>
+        <p class="alert alert-notice"><%= notice %></p>
+        <br>
+      <% end %>
+      <% if alert %>
+        <p class="alert alert-error"><%= alert %></p>
+        <br>
+      <% end %>
+      <%= yield %>
+    </div>
+    <footer>
+      <%= link_to "自動作成 シフトさん TOP", root_path %>
+    </footer>
+  </body>
+</html>
